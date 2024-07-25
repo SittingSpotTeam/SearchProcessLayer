@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController("/search-pl/api/v1")
+@RestController("/api/v1")
 public class SearchProcessLayerController {
 
     @GetMapping("/")
