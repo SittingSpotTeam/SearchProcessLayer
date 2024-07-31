@@ -40,7 +40,8 @@ public class SearchProcessLayerController {
                                     @RequestParam(value = "labels",required = false) List<String> labels) throws IOException, InterruptedException {
         
         var client = HttpClient.newHttpClient();
-        
+
+        // forward the request to the logic layer
         var searchRequest = HttpRequest.newBuilder().uri(URI.create("http://" + searchLogicUrl + searchLogicApiVersion + "/?location=" + location + "&tags=" + tags + "&labels=" + labels)).build();
         var searchResult = client.send(searchRequest, HttpResponse.BodyHandlers.ofString());
         
@@ -49,7 +50,8 @@ public class SearchProcessLayerController {
         }
         
         List<QueryResult> data = new ObjectMapper().readerForListOf(QueryResult.class).readValue(searchResult.body());
-        
+
+        // once the result comes back update the query dl with the query just completed
         var queryPostRequest = HttpRequest.newBuilder()
                                        .uri(URI.create("http://" + querydUrl + querydlApiVersion + "/"))
                                        .POST(HttpRequest.BodyPublishers.ofString(new ObjectMapper().writeValueAsString(new QueryInDTO(location,tags,labels,data))))
