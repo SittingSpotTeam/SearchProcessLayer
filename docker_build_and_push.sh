@@ -1,0 +1,1 @@
+docker build . -t sittingspotapp/searchprocesslayer:1.3-dev && docker push sittingspotapp/searchprocesslayer:1.3-dev
