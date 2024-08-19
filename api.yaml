@@ -12,12 +12,21 @@ paths:
       description: Generate a query with the specified parameter and return a list of sitting spots
       operationId: searchSittingSpot
       parameters:
-        - name: location
+        - name: x
           in: query
-          description: General position of the search
           required: true
           schema:
-            $ref: '#/components/schemas/Area'
+            type: number
+        - name: y
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: area
+          in: query
+          required: true
+          schema:
+            type: number
         - name: tags
           in: query
           description: Tags of the sitting spot

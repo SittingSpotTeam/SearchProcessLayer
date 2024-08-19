@@ -3,6 +3,7 @@ package com.sittingspot.searchprocesslayer.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sittingspot.searchprocesslayer.DTO.QueryInDTO;
 import com.sittingspot.searchprocesslayer.models.Area;
+import com.sittingspot.searchprocesslayer.models.Location;
 import com.sittingspot.searchprocesslayer.models.QueryResult;
 import com.sittingspot.searchprocesslayer.models.Tag;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,14 +30,16 @@ public class SearchProcessLayerController {
     private String searchLogicUrl;
 
     @GetMapping("/")
-    public List<QueryResult> search(@RequestParam("location") Area location,
+    public List<QueryResult> search(@RequestParam("x") Double x,
+                                    @RequestParam("y") Double y,
+                                    @RequestParam("area") Double area,
                                     @RequestParam(value = "tags",required = false) List<Tag> tags,
                                     @RequestParam(value = "labels",required = false) List<String> labels) throws IOException, InterruptedException {
         
         var client = HttpClient.newHttpClient();
-
+        var location = new Area(new Location(x,y),area);
         // forward the request to the logic layer
-        var searchRequest = HttpRequest.newBuilder().uri(URI.create("http://" + searchLogicUrl  + "/?location=" + location + "&tags=" + tags + "&labels=" + labels)).build();
+        var searchRequest = HttpRequest.newBuilder().uri(URI.create("http://" + searchLogicUrl  + "/?x="+x+"&y="+y+"&area="+area+ "&tags=" + tags + "&labels=" + labels)).build();
         var searchResult = client.send(searchRequest, HttpResponse.BodyHandlers.ofString());
         
         if (searchResult.statusCode() != 200) {
