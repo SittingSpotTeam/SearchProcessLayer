@@ -25,14 +25,8 @@ public class SearchProcessLayerController {
     @Value("${sittingspot.querydl.url}")
     private String querydUrl;
     
-    @Value("${sittingspot.querydl.api.version}")
-    private String querydlApiVersion;
-    
     @Value("${sittingspot.searchlogic.url}")
     private String searchLogicUrl;
-    
-    @Value("${sittingspot.searchlogic.api.version}")
-    private String searchLogicApiVersion;
 
     @GetMapping("/")
     public List<QueryResult> search(@RequestParam("location") Area location,
@@ -42,7 +36,7 @@ public class SearchProcessLayerController {
         var client = HttpClient.newHttpClient();
 
         // forward the request to the logic layer
-        var searchRequest = HttpRequest.newBuilder().uri(URI.create("http://" + searchLogicUrl + searchLogicApiVersion + "/?location=" + location + "&tags=" + tags + "&labels=" + labels)).build();
+        var searchRequest = HttpRequest.newBuilder().uri(URI.create("http://" + searchLogicUrl  + "/?location=" + location + "&tags=" + tags + "&labels=" + labels)).build();
         var searchResult = client.send(searchRequest, HttpResponse.BodyHandlers.ofString());
         
         if (searchResult.statusCode() != 200) {
@@ -53,7 +47,7 @@ public class SearchProcessLayerController {
 
         // once the result comes back update the query dl with the query just completed
         var queryPostRequest = HttpRequest.newBuilder()
-                                       .uri(URI.create("http://" + querydUrl + querydlApiVersion + "/"))
+                                       .uri(URI.create("http://" + querydUrl + "/"))
                                        .POST(HttpRequest.BodyPublishers.ofString(new ObjectMapper().writeValueAsString(new QueryInDTO(location,tags,labels,data))))
                                        .build();
         
