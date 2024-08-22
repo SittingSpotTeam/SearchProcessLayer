@@ -4,7 +4,7 @@ info:
   description: Process Layer from which each query starts
   version: 1.0.0
 servers:
-  - url: https://search-pl/api/v1
+  - url: http://searchprocesslayer/api/v1
 paths:
   /:
     get:
